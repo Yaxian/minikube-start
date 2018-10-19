@@ -15,47 +15,69 @@ $ minikube version
 
 I used [hyperkit](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperkit-driver)
 
-### 1. Start
+### 1. Prepare docker images dependended and Start minikube
 
-Run `docker pull` the following images:
+Run `docker pull` the following images on `Host` terminal:
 
 ```
+	k8s.gcr.io/coredns:1.2.2
+	k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0
+	k8s.gcr.io/kube-proxy-amd64:v1.10.0
 	k8s.gcr.io/kube-apiserver-amd64:v1.10.0
 	k8s.gcr.io/kube-controller-manager-amd64:v1.10.0
 	k8s.gcr.io/kube-scheduler-amd64:v1.10.0
 	k8s.gcr.io/etcd-amd64:3.1.12
-
-	k8s.gcr.io/kube-proxy-amd64:v1.10.0
+	k8s.gcr.io/kube-addon-manager:v8.6
+	k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+	k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8
+	k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8
 	k8s.gcr.io/pause-amd64:3.1
+	gcr.io/k8s-minikube/storage-provisioner:v1.8.1
 ```
 
 Save the images as `k8s.zip`:
 ```
-$ docker save k8s.gcr.io/kube-apiserver-amd64 k8s.gcr.io/kube-proxy-amd64 k8s.gcr.io/kube-scheduler-amd64 k8s.gcr.io/kube-controller-manager-amd64 k8s.gcr.io/pause-amd64 | gzip ./k8s.zip
+$ docker save \
+	k8s.gcr.io/coredns:1.2.2 \
+	k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0 \
+	k8s.gcr.io/kube-proxy-amd64:v1.10.0 \
+	k8s.gcr.io/kube-apiserver-amd64:v1.10.0 \
+	k8s.gcr.io/kube-controller-manager-amd64:v1.10.0 \
+	k8s.gcr.io/kube-scheduler-amd64:v1.10.0 \
+	k8s.gcr.io/etcd-amd64:3.1.12 \
+	k8s.gcr.io/kube-addon-manager:v8.6 \
+	k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8 \
+	k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8 \
+	k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8 \
+	k8s.gcr.io/pause-amd64:3.1 \
+	gcr.io/k8s-minikube/storage-provisioner:v1.8.1 \
+	| gzip ./k8s.zip
 ```
 
-If the size of `k8s.zip` is great than `120M`, please do twice by saving different images.
-
-After then:
+After then, run the following commands:
 ```
 $ minikube stop
 $ minikube delete
 $ minikube start --vm-driver=hyperkit -v=9
 ```
 
-### 2. minikube hangs at `Starting cluster components...`
+### 2. When terminal prints `Starting cluster components...`
 
 * user is `docker`
 * password is `tcuser`
 
+The `/mnt/vda1` has enough space to save `k8s.zip` in `vm`, so we can start a simple HTTP server in `Host` by:
+
 ```
-$ scp k8s.zip docker@$(minikube ip):~/
-$ minikube ssh
+$ python -m SimpleHTTPServer
 ```
 
 ### 3. After login the `vm`
-
+login in `vm`:
 ```
+$ ssh docker@$(minikube ip)
+$ cd /mnt/vda1
+$ sudo wget 'http://host_ip:8000/k8s.zip'
 $ docker load < k8s.zip
 $ rm k8s.zip
 $ docker images
@@ -100,4 +122,9 @@ will display log in termina:
 ```
 NAME       STATUS    ROLES     AGE       VERSION
 minikube   Ready     <none>    17m       v1.10.0
+```
+
+and
+```
+$ minikube dashboard
 ```
