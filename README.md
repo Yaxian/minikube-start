@@ -77,7 +77,7 @@ login in `vm`:
 ```
 $ ssh docker@$(minikube ip)
 $ cd /mnt/vda1
-$ sudo wget 'http://host_ip:8000/k8s.zip'
+$ sudo wget 'http://host_ip:8000/k8s.zip' # (in my case host id was 192.168.64.3 but you will have to connect to 192.168.64.1)
 $ docker load < k8s.zip
 $ rm k8s.zip
 $ docker images
