@@ -75,7 +75,7 @@ $ python -m SimpleHTTPServer
 ### 3. After login the `vm`
 login in `vm`:
 ```
-$ ssh docker@$(minikube ip)
+$ ssh docker@$(minikube ip) # using password "tcuser"
 $ cd /mnt/vda1
 $ sudo wget 'http://host_ip:8000/k8s.zip'
 $ docker load < k8s.zip
