@@ -121,7 +121,7 @@ will display log in termina:
 
 ```
 NAME       STATUS    ROLES     AGE       VERSION
-minikube   Ready     <none>    17m       v1.10.0
+minikube   Ready     master    17m       v1.10.0
 ```
 
 and
