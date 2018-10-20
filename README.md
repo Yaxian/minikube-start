@@ -79,7 +79,7 @@ $ ssh docker@$(minikube ip)
 $ cd /mnt/vda1
 $ sudo wget 'http://host_ip:8000/k8s.zip'
 $ docker load < k8s.zip
-$ rm k8s.zip
+$ sudo rm k8s.zip
 $ docker images
 ```
 
