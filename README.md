@@ -51,7 +51,7 @@ $ docker save \
 	k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8 \
 	k8s.gcr.io/pause-amd64:3.1 \
 	gcr.io/k8s-minikube/storage-provisioner:v1.8.1 \
-	| gzip ./k8s.zip
+	| gzip -c > k8s.zip
 ```
 
 After then, run the following commands:
