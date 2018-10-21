@@ -11,7 +11,7 @@ $ minikube version
 ```
   > minikube version: v0.30.0
 
-### install vmdriver
+### install vm driver
 
 I used [hyperkit](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperkit-driver)
 
@@ -56,28 +56,32 @@ $ docker save \
 
 After then, run the following commands:
 ```
+$ sudo rm /var/db/dhcpd_leases # before you remove it, try 'cat /var/db/dhcpd_leases'
 $ minikube stop
 $ minikube delete
 $ minikube start --vm-driver=hyperkit -v=9
 ```
 
 ### 2. When terminal prints `Starting cluster components...`
-
-* user is `docker`
-* password is `tcuser`
-
-The `/mnt/vda1` has enough space to save `k8s.zip` in `vm`, so we can start a simple HTTP server in `Host` by:
+We will start a simple HTTP server in `Host` by:
 
 ```
 $ python -m SimpleHTTPServer
 ```
 
-### 3. After login the `vm`
-login in `vm`:
+to serve `k8s.zip` which will be downloaded in `vm`.
+
+### 3. Login the `vm`
+
 ```
 $ ssh docker@$(minikube ip) # using password "tcuser"
+```
+
+The `/mnt/vda1` has enough space to save `k8s.zip`, run the following commands:
+
+```
 $ cd /mnt/vda1
-$ sudo wget 'http://host_ip:8000/k8s.zip' # (in my case host id was 192.168.64.3 but you will have to connect to 192.168.64.1)
+$ sudo wget 'http://host_ip:8000/k8s.zip' # (in my case host ip was 192.168.64.3 but you will have to connect to 192.168.64.1)
 $ docker load < k8s.zip
 $ sudo rm k8s.zip
 $ docker images
@@ -128,3 +132,5 @@ and
 ```
 $ minikube dashboard
 ```
+
+Have fun with k8s!
