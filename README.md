@@ -4,12 +4,12 @@
 
 ### install minikube
 
-Please follow this [tutorial](https://kubernetes.io/docs/tutorials/hello-minikube/)
+Please follow this [tutorial](https://kubernetes.io/docs/tasks/tools/install-minikube/#install-kubectl)
 
 ```
 $ minikube version
 ```
-  > minikube version: v0.30.0
+  > minikube version: v0.33.1
 
 ### install vm driver
 
@@ -20,37 +20,25 @@ I used [hyperkit](https://github.com/kubernetes/minikube/blob/master/docs/driver
 Run `docker pull` the following images on `Host` terminal:
 
 ```
-	k8s.gcr.io/coredns:1.2.2
-	k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0
-	k8s.gcr.io/kube-proxy-amd64:v1.10.0
-	k8s.gcr.io/kube-apiserver-amd64:v1.10.0
-	k8s.gcr.io/kube-controller-manager-amd64:v1.10.0
-	k8s.gcr.io/kube-scheduler-amd64:v1.10.0
-	k8s.gcr.io/etcd-amd64:3.1.12
-	k8s.gcr.io/kube-addon-manager:v8.6
-	k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8
-	k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8
-	k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8
-	k8s.gcr.io/pause-amd64:3.1
-	gcr.io/k8s-minikube/storage-provisioner:v1.8.1
+	k8s.gcr.io/kube-apiserver:v1.13.2
+	k8s.gcr.io/kube-controller-manager:v1.13.2
+	k8s.gcr.io/kube-scheduler:v1.13.2
+	k8s.gcr.io/kube-proxy:v1.13.2
+	k8s.gcr.io/pause:3.1
+	k8s.gcr.io/etcd:3.2.24
+	k8s.gcr.io/coredns:1.2.6
 ```
 
 Save the images as `k8s.zip`:
 ```
 $ docker save \
-	k8s.gcr.io/coredns:1.2.2 \
-	k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0 \
-	k8s.gcr.io/kube-proxy-amd64:v1.10.0 \
-	k8s.gcr.io/kube-apiserver-amd64:v1.10.0 \
-	k8s.gcr.io/kube-controller-manager-amd64:v1.10.0 \
-	k8s.gcr.io/kube-scheduler-amd64:v1.10.0 \
-	k8s.gcr.io/etcd-amd64:3.1.12 \
-	k8s.gcr.io/kube-addon-manager:v8.6 \
-	k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8 \
-	k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8 \
-	k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8 \
-	k8s.gcr.io/pause-amd64:3.1 \
-	gcr.io/k8s-minikube/storage-provisioner:v1.8.1 \
+	k8s.gcr.io/kube-apiserver:v1.13.2 \
+	k8s.gcr.io/kube-controller-manager:v1.13.2 \
+	k8s.gcr.io/kube-scheduler:v1.13.2 \
+	k8s.gcr.io/kube-proxy:v1.13.2 \
+	k8s.gcr.io/pause:3.1 \
+	k8s.gcr.io/etcd:3.2.24 \
+	k8s.gcr.io/coredns:1.2.6 \
 	| gzip -c > k8s.zip
 ```
 
@@ -61,6 +49,30 @@ $ minikube stop
 $ minikube delete
 $ minikube start --vm-driver=hyperkit -v=9
 ```
+
+### 1.1 fail to download ios
+
+Download [minikube-v0.33.1.iso](//storage.googleapis.com/minikube/iso/minikube-v0.33.1.iso) and move it into `~/.minikube/iso/` path.
+
+
+### 1.2 hang on downloading `kubeadm` and `kubectl`
+
+Retry `minikube start --vm-driver=hyperkit -v=9` some times.
+
+<!-- ### 1.2 fail to download kubeadm and kubelet
+
+* Download [kubeadm](https://storage.googleapis.com/kubernetes-release/release/v1.13.2/bin/linux/amd64/kubeadm)
+  * `$ scp kubeadm docker@$(minikube ip):~/`
+  * `$ minikube ssh`
+  * `$ sudo mv kubeadm /usr/bin/`
+  * `$ chmod +x /usr/bin/kubeadm`
+
+* Download [kubelet](https://storage.googleapis.com/kubernetes-release/release/v1.13.2/bin/linux/amd64/kubelet)
+  * `$ scp kubelet docker@$(minikube ip):~/`
+  * `$ minikube ssh`
+  * `$ sudo mv kubelet /usr/bin/`
+    * `$ chmod +x /usr/bin/kubelet` -->
+
 
 ### 2. When terminal prints `Starting cluster components...`
 We will start a simple HTTP server in `Host` by:
@@ -112,8 +124,8 @@ $ kubectl version
 will display log in termina:
 
 ```
-Client Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.0", GitCommit:"fc32d2f3698e36b93322a3465f63a14e9f0eaead", GitTreeState:"clean", BuildDate:"2018-03-26T16:55:54Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"darwin/amd64"}
-Server Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.0", GitCommit:"fc32d2f3698e36b93322a3465f63a14e9f0eaead", GitTreeState:"clean", BuildDate:"2018-03-26T16:44:10Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.3", GitCommit:"721bfa751924da8d1680787490c54b9179b1fed0", GitTreeState:"clean", BuildDate:"2019-02-04T04:48:03Z", GoVersion:"go1.11.5", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.2", GitCommit:"cff46ab41ff0bb44d8584413b598ad8360ec1def", GitTreeState:"clean", BuildDate:"2019-01-10T23:28:14Z", GoVersion:"go1.11.4", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 and
@@ -126,12 +138,7 @@ will display log in termina:
 
 ```
 NAME       STATUS    ROLES     AGE       VERSION
-minikube   Ready     master    17m       v1.10.0
-```
-
-and
-```
-$ minikube dashboard
+minikube   Ready     master    17m       v1.13.2
 ```
 
 Have fun with k8s!
